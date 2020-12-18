@@ -58,4 +58,16 @@ public class Order {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean isShipped() {
+        return getStatus().equals(OrderStatus.SHIPPED);
+    }
+
+    public boolean isRejected() {
+        return getStatus().equals(OrderStatus.REJECTED);
+    }
+
+    public boolean isApproved() {
+        return getStatus().equals(OrderStatus.APPROVED);
+    }
 }
