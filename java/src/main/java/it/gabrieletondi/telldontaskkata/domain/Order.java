@@ -3,6 +3,9 @@ package it.gabrieletondi.telldontaskkata.domain;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.CREATED;
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.REJECTED;
+
 public class Order {
     private BigDecimal total;
     private String currency;
@@ -43,10 +46,6 @@ public class Order {
         this.tax = tax;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
@@ -60,14 +59,22 @@ public class Order {
     }
 
     public boolean isShipped() {
-        return getStatus().equals(OrderStatus.SHIPPED);
+        return status.equals(OrderStatus.SHIPPED);
     }
 
     public boolean isRejected() {
-        return getStatus().equals(OrderStatus.REJECTED);
+        return status.equals(OrderStatus.REJECTED);
     }
 
     public boolean isApproved() {
-        return getStatus().equals(OrderStatus.APPROVED);
+        return status.equals(OrderStatus.APPROVED);
+    }
+
+    public boolean isNotShippable() {
+        return isCreated() || status.equals(REJECTED);
+    }
+
+    public boolean isCreated() {
+        return status.equals(CREATED);
     }
 }

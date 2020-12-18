@@ -17,15 +17,16 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
     private Category food = new Category() {{
         setName("food");
         setTaxPercentage(new BigDecimal("10"));
-    }};;
+    }};
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
-            Arrays.<Product>asList(
+            Arrays.asList(
                     new Product() {{
                         setName("salad");
                         setPrice(new BigDecimal("3.56"));
@@ -41,7 +42,7 @@ public class OrderCreationUseCaseTest {
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
-    public void sellMultipleItems() throws Exception {
+    public void sellMultipleItems() {
         SellItemRequest saladRequest = new SellItemRequest();
         saladRequest.setProductName("salad");
         saladRequest.setQuantity(2);
@@ -58,7 +59,7 @@ public class OrderCreationUseCaseTest {
         useCase.run(request);
 
         final Order insertedOrder = orderRepository.getSavedOrder();
-        assertThat(insertedOrder.getStatus(), is(OrderStatus.CREATED));
+        assertTrue(insertedOrder.isCreated());
         assertThat(insertedOrder.getTotal(), is(new BigDecimal("23.20")));
         assertThat(insertedOrder.getTax(), is(new BigDecimal("2.13")));
         assertThat(insertedOrder.getCurrency(), is("EUR"));
@@ -76,7 +77,7 @@ public class OrderCreationUseCaseTest {
     }
 
     @Test(expected = UnknownProductException.class)
-    public void unknownProduct() throws Exception {
+    public void unknownProduct() {
         SellItemsRequest request = new SellItemsRequest();
         request.setRequests(new ArrayList<>());
         SellItemRequest unknownProductRequest = new SellItemRequest();
